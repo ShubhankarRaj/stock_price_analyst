@@ -1,7 +1,6 @@
 import yfinance as yf
 import pandas as pd
 
-from insert_data import insert_dividend_split_info, insert_tick_info
 from stock_symbols import stock_symbols
 
 pd.set_option('display.max_columns', None)
