@@ -3,6 +3,7 @@ from startup.db_connector import DBHandle
 from configurations.get_config import get_queries
 from startup.get_columns import GetColumns
 
+CUSTOM_KEY = 'currentDate'
 
 class InsertOperations:
     def __init__(self):
@@ -12,7 +13,7 @@ class InsertOperations:
 
     def check_for_stock_already_present(self, symbol):
         QUERY = get_queries().get('check_for_stock_already_present').format(symbol)
-        print(QUERY)
+        print(f"Check for Stock already present query:\n{QUERY}")
         self.cursor.execute(get_queries().get('check_for_stock_already_present').format(symbol))
         count = self.cursor.fetchone()[0]
         if count == 0:
@@ -20,62 +21,31 @@ class InsertOperations:
         else:
             return True
 
-    def insert_stock_info(self, symbol, info):
+    def insert_stock_info(self, info):
         cols = self.get_columns.get_ticker_info_cols()
         col_tuple = tuple(cols)
         value_list = []
         for key in cols:
-            value_list.append(info.get(key))
+            if key != CUSTOM_KEY:
+                value_list.append(info.get(key))
+        # Adding the value for the CUSTOM_KEY
         value_list.append('CURDATE()')
         QUERY = "Insert into ticker_info {}".format(col_tuple)
         # Removing quotes from the Query
         QUERY = QUERY.replace("'","")
         QUERY = "{} VALUES {}".format(QUERY, tuple(value_list))
         QUERY = QUERY.replace("None", "NULL")
-        print(QUERY)
+        QUERY = QUERY.replace("'CURDATE()'", "CURDATE()")
+        print(f"Stock Info Insert Query: \n{QUERY}")
+        try:
+            print("Executing QUERY!")
+            self.cursor.execute(QUERY)
+        except Exception as e:
+            print(f"Query execution for Inserting Stock info to DB failed. EXCEPTION: {e}")
 
-    def insert_stock_history(self, symbol, history_df):
-        pass
+    def insert_stock_history(self, history_df):
+        # Mapping the Columns that we get in historical data's dataframe to info
+        print(history_df)
 
     def close_db_connection(self):
         self.conn.close_db_connection()
-
-
-# def insert_dividend_split_info(symbol, info):
-#     cnx = DBHandle().get_db_connection()
-#     cursor = cnx.cursor()
-#
-#     add_dividend = ("INSERT INTO dividend_info "
-#                     "(share_symbol, dividend_date, div_percent) "
-#                     "VALUES (%s, %s, %s)")
-#
-#     add_split_info = ("INSERT INTO split_info "
-#                       "(split_date, split_ratio, share_symbol) "
-#                       "VALUES (%s, %s, %s)")
-#
-#     info = info.to_dict()
-#     date_dict = info["Open"].keys()
-#     for i in date_dict:
-#         if int(info["Dividends"][i]) > 0:
-#             dividend_data = (symbol, i.to_pydatetime(), float(info["Dividends"][i]))
-#             print(type(dividend_data))
-#             cursor.execute(add_dividend, dividend_data)
-#
-#         if int(info["Stock Splits"][i]) > 0:
-#             split_data = (i.to_pydatetime(), float(info["Stock Splits"][i]), symbol)
-#             cursor.execute(add_split_info, split_data)
-#     # Make sure data is committed to the database
-#     cnx.commit()
-#     cursor.close()
-#     cnx.close()
-#
-#
-# def insert_tick_info(data):
-#     cnx = DBHandle().get_db_connection()
-#     cursor = cnx.cursor()
-#     cursor.execute(insert_statements['ticker_info'], data)
-#     cnx.commit()
-#     cursor.close()
-#     cnx.close()
-
-

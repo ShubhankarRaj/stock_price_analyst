@@ -25,7 +25,6 @@ def create_database(cursor):
         print("Failed creating database: {}".format(err))
         exit(1)
 
-
 try:
     sql_conn = SQLConnection()
     connection = sql_conn.connect_to_sql()

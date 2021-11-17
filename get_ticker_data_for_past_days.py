@@ -1,10 +1,8 @@
 import yfinance as yf
 import pandas as pd
-
 from stock_symbols import stock_symbols
 
 pd.set_option('display.max_columns', None)
-
 for symbol in stock_symbols:
     symbol = stock_symbols.get(symbol)
     yahoo_finance_api_data = yf.Ticker(symbol)

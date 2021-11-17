@@ -3,6 +3,7 @@ from configurations.load_config import Config
 SQL_KEY = 'sql'
 TABLES_KEY = 'tables'
 STOCKS_KEY = 'stocks'
+NEW_STOCKS_KEY = 'new_stocks'
 HISTORY = 'days_in_history'
 QUERIES = 'queries'
 
@@ -26,6 +27,10 @@ def get_table_queries():
 
 def get_stocks_list():
     return config.get(STOCKS_KEY)
+
+
+def get_new_stocks_list():
+    return config.get(NEW_STOCKS_KEY)
 
 
 def get_historical_days():
