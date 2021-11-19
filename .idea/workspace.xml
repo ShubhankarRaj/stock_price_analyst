@@ -2,14 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4ed1af65-3061-457a-966e-7a1d93c63d51" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/load_history.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configurations/get_config.py" beforeDir="false" afterPath="$PROJECT_DIR$/configurations/get_config.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/configurations/resources/config.json" beforeDir="false" afterPath="$PROJECT_DIR$/configurations/resources/config.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/get_ticker_data_for_past_days.py" beforeDir="false" afterPath="$PROJECT_DIR$/get_ticker_data_for_past_days.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/load_history.sh" beforeDir="false" afterPath="$PROJECT_DIR$/load_history.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/operations/insert_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/operations/insert_data.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/orchestrator.py" beforeDir="false" afterPath="$PROJECT_DIR$/orchestrator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/startup/create_db.py" beforeDir="false" afterPath="$PROJECT_DIR$/startup/create_db.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/startup/db_connector.py" beforeDir="false" afterPath="$PROJECT_DIR$/startup/db_connector.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -47,7 +46,7 @@
       <recent name="$PROJECT_DIR$/resources" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.orchestrator">
+  <component name="RunManager" selected="Python.create_table">
     <configuration name="create_db" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="stock_price_analyst" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -90,7 +89,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="get_config" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="df_test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="stock_price_analyst" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -98,11 +97,11 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/configurations" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/operations" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/configurations/get_config.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/operations/df_test.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -145,7 +144,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/orchestrator.py" />
-      <option name="PARAMETERS" value="" />
+      <option name="PARAMETERS" value="info" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -153,13 +152,20 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <list>
+      <item itemvalue="Python.create_db" />
+      <item itemvalue="Python.create_table" />
+      <item itemvalue="Python.df_test" />
+      <item itemvalue="Python.insert_data" />
+      <item itemvalue="Python.orchestrator" />
+    </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.orchestrator" />
         <item itemvalue="Python.create_table" />
-        <item itemvalue="Python.insert_data" />
         <item itemvalue="Python.create_db" />
-        <item itemvalue="Python.get_config" />
+        <item itemvalue="Python.orchestrator" />
+        <item itemvalue="Python.df_test" />
+        <item itemvalue="Python.insert_data" />
       </list>
     </recent_temporary>
   </component>
@@ -195,13 +201,8 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/operations/insert_data.py</url>
-          <line>24</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/operations/insert_data.py</url>
-          <line>31</line>
-          <option name="timeStamp" value="3" />
+          <line>51</line>
+          <option name="timeStamp" value="17" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -1,13 +1,15 @@
+import defopt
+from enum import Enum
 from configurations.get_config import get_new_stocks_list, get_stocks_list, get_historical_days
 from operations.query_data import query_y_finance
 from operations.insert_data import InsertOperations
+
 
 stock_list = get_stocks_list()
 insert_operations = InsertOperations()
 new_stock_list = get_new_stocks_list()
 
-
-def insert_info():
+def _insert_info():
     for stock in stock_list:
         stock_data = query_y_finance(stock)
         print(stock_data.info)
@@ -15,13 +17,32 @@ def insert_info():
         insert_operations.insert_stock_info(info=stock_data.info)
 
 
-def insert_hist():
+def _insert_hist():
     for stock in new_stock_list:
         stock_data = query_y_finance(stock)
-        if not insert_operations.check_for_stock_already_present(symbol=stock):
-            print("Fresh Stock!")
-            insert_operations.insert_stock_history(history_df=stock_data.history(period=get_historical_days()))
+        hist = get_historical_days()
+        print(hist)
+        insert_operations.insert_stock_history(stock, history_df=stock_data.history(period="max"))
 
 
-insert_operations.close_db_connection()
-print("All Updates for stock information completed!!")
+class RunType(Enum):
+    info = "info"
+    hist = "hist"
+
+
+def orchestrate(
+        runtype: RunType
+):
+    print(runtype)
+    if runtype == RunType.info:
+        _insert_info()
+    elif runtype ==RunType.hist:
+        _insert_hist()
+    else:
+        print("INVALID OPTION!")
+    insert_operations.close_db_connection()
+    print("All Updates for stock information completed!!")
+
+
+if __name__ == "__main__":
+    defopt.run(orchestrate)

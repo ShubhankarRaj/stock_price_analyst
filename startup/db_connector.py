@@ -30,7 +30,10 @@ class DBHandle:
 
     def close_db_connection(self):
         if self.connection.is_connected():
-            self.connection.commit()
             self.cursor.close()
             self.connection.close()
             print("DB connection is closed")
+
+    def commit_connection_data(self):
+        if self.connection.is_connected():
+            self.connection.commit()
