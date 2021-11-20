@@ -129,4 +129,4 @@ dmypy.json
 .pyre/
 
 # Idea stuff
-.idea/workspace.xml
+.idea/*
