@@ -19,7 +19,7 @@ class InsertOperations:
         self.cursor = self.conn.get_db_connection().cursor()
         self.get_columns = GetColumns()
 
-    def check_for_stock_already_present(self, table_type: TableType, symbol):
+    def _check_for_stock_already_present(self, table_type: TableType, symbol):
         if table_type == TableType.ticker:
             QUERY = get_queries().get('check_for_stock_in_ticker_info').format(symbol)
             self.cursor.execute(get_queries().get('check_for_stock_in_ticker_info').format(symbol))
@@ -40,7 +40,7 @@ class InsertOperations:
         else:
             return True
 
-    def insert_map_to_table(self, table_type: TableType, col_tuple, value_list):
+    def _insert_map_to_table(self, table_type: TableType, col_tuple, value_list):
         if table_type == TableType.ticker:
             QUERY = "Insert into ticker_info {}".format(col_tuple)
         elif table_type == TableType.dividend:
@@ -60,7 +60,7 @@ class InsertOperations:
         except Exception as e:
             print(f"Query execution for Inserting Stock info to DB failed. EXCEPTION: {e}")
 
-    def update_table(self, table_type: TableType, table_col_map, history_df, stock):
+    def _update_table(self, table_type: TableType, table_col_map, history_df, stock):
         if table_type == TableType.ticker:
             cols = self.get_columns.get_ticker_info_cols()
         elif table_type == TableType.dividend:
@@ -68,7 +68,7 @@ class InsertOperations:
         elif table_type == TableType.split:
             cols = self.get_columns.get_split_info_cols()
         col_tuple = tuple(cols)
-        if not self.check_for_stock_already_present(table_type, stock):
+        if not self._check_for_stock_already_present(table_type, stock):
             print(f"Fresh {table_type.value} Info for {stock}!!")
             for index, row in history_df.iterrows():
                 value_list = []
@@ -84,7 +84,7 @@ class InsertOperations:
 
                 for key in cols:
                     value_list.append(table_dict.get(key))
-                self.insert_map_to_table(table_type, col_tuple, value_list)
+                self._insert_map_to_table(table_type, col_tuple, value_list)
         else:
             print(f"{stock} already present in {table_type.value} Info table.")
         self.commit_transaction()
@@ -98,7 +98,7 @@ class InsertOperations:
                 value_list.append(info.get(key))
         # Adding the value for the CUSTOM_KEY
         value_list.append('CURDATE()')
-        self.insert_map_to_table(TableType.ticker, col_tuple, value_list)
+        self._insert_map_to_table(TableType.ticker, col_tuple, value_list)
         self.commit_transaction()
 
     def insert_stock_history(self, stock, history_df):
@@ -107,9 +107,10 @@ class InsertOperations:
         dividend_col_map = {"Date":"dividend_date", "Dividends":"div_percent"}
         split_col_map = {"Date":"split_date","Stock Splits": "split_ratio"}
 
-        self.update_table(TableType.ticker, info_col_map, history_df, stock)
-        self.update_table(TableType.dividend, dividend_col_map, history_df, stock)
-        self.update_table(TableType.split, split_col_map, history_df, stock)
+        self._update_table(TableType.ticker, info_col_map, history_df, stock)
+        self._update_table(TableType.dividend, dividend_col_map, history_df, stock)
+        self._update_table(TableType.split, split_col_map, history_df, stock)
+
 
     def close_db_connection(self):
         self.conn.close_db_connection()
