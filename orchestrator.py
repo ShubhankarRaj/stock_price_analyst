@@ -9,12 +9,21 @@ stock_list = get_stocks_list()
 insert_operations = InsertOperations()
 new_stock_list = get_new_stocks_list()
 
+
+def _insert_sentiment_info():
+    pass
+
+
 def _insert_info():
     for stock in stock_list:
         stock_data = query_y_finance(stock)
         print(stock_data.info)
         print("Adding Stock Details/Info!")
         insert_operations.insert_stock_info(info=stock_data.info)
+
+
+def _insert_sentiment_hist():
+    pass
 
 
 def _insert_hist():

@@ -61,6 +61,15 @@ class InsertOperations:
             print(f"Query execution for Inserting Stock info to DB failed. EXCEPTION: {e}")
 
     def _update_table(self, table_type: TableType, table_col_map, history_df, stock):
+        """
+        Using the same function to update for all the different types of tables:
+        ticker_info/dividend_info/split_info
+        :param table_type:
+        :param table_col_map:
+        :param history_df:
+        :param stock:
+        :return:
+        """
         if table_type == TableType.ticker:
             cols = self.get_columns.get_ticker_info_cols()
         elif table_type == TableType.dividend:
