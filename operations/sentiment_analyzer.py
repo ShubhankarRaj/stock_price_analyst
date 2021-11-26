@@ -129,4 +129,3 @@ def get_datewise_sentiment(search_query, no_of_tweets, no_of_days):
         date_wise_sentiment[['Sentiment', 'Percentage']] = pd.DataFrame(date_wise_sentiment[0].tolist(),
                                                                           index=date_wise_sentiment.index)
         return date_wise_sentiment
-

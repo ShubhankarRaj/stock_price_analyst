@@ -28,7 +28,7 @@ def _insert_info():
             stock_data_info['sentiment'] = None
         else:
             stock_data_info['sentiment'] = sentiment_df.at[0, 'Sentiment']
-        print("Adding Stock Details/Info!")
+        print("Adding Stock Details/Info to data-base!")
         insert_operations.insert_stock_info(info=stock_data_info)
 
 
