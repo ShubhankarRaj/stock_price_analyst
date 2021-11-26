@@ -103,10 +103,12 @@ class InsertOperations:
         col_tuple = tuple(cols)
         value_list = []
         for key in cols:
-            if key != CUSTOM_KEY:
+            if key == CUSTOM_KEY:
+                # Adding the value for the CUSTOM_KEY
+                value_list.append('CURDATE()')
+            else:
                 value_list.append(info.get(key))
-        # Adding the value for the CUSTOM_KEY
-        value_list.append('CURDATE()')
+
         self._insert_map_to_table(TableType.ticker, col_tuple, value_list)
         self.commit_transaction()
 

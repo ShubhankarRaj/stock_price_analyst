@@ -6,7 +6,7 @@ STOCKS_KEY = 'stocks'
 NEW_STOCKS_KEY = 'new_stocks'
 HISTORY = 'days_in_history'
 QUERIES = 'queries'
-
+DAILY_TWEET_CNT_FOR_INFO = 'daily_tweet_count_for_info'
 config_obj = Config()
 config = config_obj.load_conf()
 
@@ -39,4 +39,8 @@ def get_historical_days():
 
 def get_queries():
     return config.get(QUERIES)
+
+
+def get_daily_tweet_count_for_info():
+    return config.get(DAILY_TWEET_CNT_FOR_INFO)
 

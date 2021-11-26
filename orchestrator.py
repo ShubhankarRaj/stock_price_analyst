@@ -1,25 +1,35 @@
 import defopt
 from enum import Enum
-from configurations.get_config import get_new_stocks_list, get_stocks_list, get_historical_days
+from configurations.get_config import get_new_stocks_list, get_stocks_list, get_historical_days, get_daily_tweet_count_for_info
 from operations.query_data import query_y_finance
 from operations.insert_data import InsertOperations
+from operations.sentiment_analyzer import get_datewise_sentiment
 
 
 stock_list = get_stocks_list()
+daily_tweet_cnt_for_info = get_daily_tweet_count_for_info()
 insert_operations = InsertOperations()
 new_stock_list = get_new_stocks_list()
 
 
-def _insert_sentiment_info():
-    pass
+def _get_sentiment_info(stock):
+    QUERY = stock.replace(".NS","")
+    return get_datewise_sentiment(QUERY, daily_tweet_cnt_for_info, 1)
 
 
 def _insert_info():
     for stock in stock_list:
         stock_data = query_y_finance(stock)
-        print(stock_data.info)
+        stock_data_info = stock_data.info
+        # Get Stock info
+        sentiment_df = _get_sentiment_info(stock)
+        print(sentiment_df['Sentiment'])
+        if sentiment_df.empty:
+            stock_data_info['sentiment'] = None
+        else:
+            stock_data_info['sentiment'] = sentiment_df.at[0, 'Sentiment']
         print("Adding Stock Details/Info!")
-        insert_operations.insert_stock_info(info=stock_data.info)
+        insert_operations.insert_stock_info(info=stock_data_info)
 
 
 def _insert_sentiment_hist():

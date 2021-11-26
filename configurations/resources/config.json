@@ -14,7 +14,7 @@
   "new_stocks": [],
   "days_in_history": 720,
   "daily_tweet_mul_for_hist": 1000,
-  "daily_tweet_mul_for_info": 5000,
+  "daily_tweet_count_for_info": 5000,
   "queries": {
     "check_for_stock_in_ticker_info": "Select count(*) from ticker_info where symbol='{}';",
     "check_for_stock_in_dividend_info": "Select count(*) from dividend_info where symbol='{}';",

@@ -5,7 +5,13 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import snscrape.modules.twitter as sntwitter
 import nltk
 
-nltk.download('vader_lexicon')
+# Download using the below method as it works in case of JUPYTER
+# nltk.download('vader_lexicon')
+# For downloading using Python editor, download it from http://www.nltk.org/nltk_data/ and save unzipped content at :
+# Windows: C:\nltk_data\tokenizers
+# OSX: /usr/local/share/nltk_data/tokenizers
+# Unix: /usr/share/nltk_data/tokenizers
+#
 
 
 def cleanTxt(text):
@@ -53,7 +59,7 @@ def _percentage(part,whole):
     return 100 * float(part)/float(whole)
 
 
-def set_sentiment_for_day_range(search_query, no_of_tweets, no_of_days):
+def _set_sentiment_for_day_range(search_query, no_of_tweets, no_of_days):
     # Assigning Initial Values
     positive = 0
     negative = 0
@@ -97,6 +103,7 @@ def set_sentiment_for_day_range(search_query, no_of_tweets, no_of_days):
             neutral_list.append(tweet)  # appending the tweet that satisfies this condition
             neutral += 1  # increasing the count by 1
             sentiment_df.at[i, 'Sentiment'] = 'neu'
+    print(f"SENTIMENT DATAFRAME: {sentiment_df}")
     return sentiment_df
 
 
@@ -113,10 +120,13 @@ def _get_sentiment_count(g):
     return top_sentiment, highest_count / total_count
 
 
-def _get_datewise_sentiment(search_query, no_of_tweets, no_of_days):
-    sentiment_df = set_sentiment_for_day_range(search_query, no_of_tweets, no_of_days)
-    date_wise_sentiment_count = sentiment_df.groupby(['Date']).apply(_get_sentiment_count).reset_index()
-    date_wise_sentiment_count[['Sentiment', 'Percentage']] = pd.DataFrame(date_wise_sentiment_count[0].tolist(),
-                                                                          index=date_wise_sentiment_count.index)
-    return date_wise_sentiment_count
+def get_datewise_sentiment(search_query, no_of_tweets, no_of_days):
+    sentiment_df = _set_sentiment_for_day_range(search_query, no_of_tweets, no_of_days)
+    if sentiment_df.empty:
+        return sentiment_df
+    else:
+        date_wise_sentiment = sentiment_df.groupby(['Date']).apply(_get_sentiment_count).reset_index()
+        date_wise_sentiment[['Sentiment', 'Percentage']] = pd.DataFrame(date_wise_sentiment[0].tolist(),
+                                                                          index=date_wise_sentiment.index)
+        return date_wise_sentiment
 
