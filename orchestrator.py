@@ -13,7 +13,7 @@ new_stock_list = get_new_stocks_list()
 
 
 def _get_sentiment_info(stock):
-    QUERY = stock.replace(".NS","")
+    QUERY = '#'+stock.replace(".NS","")
     return get_datewise_sentiment(QUERY, daily_tweet_cnt_for_info, 1)
 
 
@@ -32,7 +32,7 @@ def _insert_info():
         insert_operations.insert_stock_info(info=stock_data_info)
 
 
-def _insert_sentiment_hist():
+def _get_sentiment_hist():
     pass
 
 
@@ -44,9 +44,14 @@ def _insert_hist():
         insert_operations.insert_stock_history(stock, history_df=stock_data.history(period="max"))
 
 
+def _dump_ticker_info():
+    insert_operations.dump_ticker_info()
+
+
 class RunType(Enum):
     info = "info"
     hist = "hist"
+    dump = "dump"
 
 
 def orchestrate(
@@ -55,8 +60,10 @@ def orchestrate(
     print(runtype)
     if runtype == RunType.info:
         _insert_info()
-    elif runtype ==RunType.hist:
+    elif runtype == RunType.hist:
         _insert_hist()
+    elif runtype == RunType.dump:
+        _dump_ticker_info()
     else:
         print("INVALID OPTION!")
     insert_operations.close_db_connection()

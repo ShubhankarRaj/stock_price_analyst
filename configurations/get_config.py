@@ -7,6 +7,7 @@ NEW_STOCKS_KEY = 'new_stocks'
 HISTORY = 'days_in_history'
 QUERIES = 'queries'
 DAILY_TWEET_CNT_FOR_INFO = 'daily_tweet_count_for_info'
+STOCK_DUMP_FILE = 'stock_dump_file'
 config_obj = Config()
 config = config_obj.load_conf()
 
@@ -43,4 +44,9 @@ def get_queries():
 
 def get_daily_tweet_count_for_info():
     return config.get(DAILY_TWEET_CNT_FOR_INFO)
+
+
+def get_stock_dump_file():
+    return config.get(STOCK_DUMP_FILE)
+
 

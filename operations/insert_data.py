@@ -1,8 +1,9 @@
 from __future__ import print_function
 from startup.db_connector import DBHandle
-from configurations.get_config import get_queries
+from configurations.get_config import get_queries, get_stock_dump_file
 from startup.get_columns import GetColumns
 from enum import Enum
+import os, csv
 
 CUSTOM_KEY = 'date_of_trade'
 
@@ -40,6 +41,26 @@ class InsertOperations:
         else:
             return True
 
+    def _query_ticker_info_table(self):
+        QUERY = get_queries().get('dump_ticker_info')
+        try:
+            self.cursor.execute(QUERY)
+            result = self.cursor.fetchall()
+        except Exception as e:
+            print(f"SQL Result dump failed. Exception: {e}")
+
+        return result
+
+    def dump_ticker_info(self):
+        result = self._query_ticker_info_table()
+        if os.path.exists(get_stock_dump_file()):
+            os.remove(get_stock_dump_file())
+
+        fp = open(get_stock_dump_file(), 'w+')
+        myFile = csv.writer(fp)
+        myFile.writerows(result)
+        fp.close()
+
     def _insert_map_to_table(self, table_type: TableType, col_tuple, value_list):
         if table_type == TableType.ticker:
             QUERY = "Insert into ticker_info {}".format(col_tuple)
@@ -59,6 +80,8 @@ class InsertOperations:
             self.cursor.execute(QUERY)
         except Exception as e:
             print(f"Query execution for Inserting Stock info to DB failed. EXCEPTION: {e}")
+        self.commit_transaction()
+
 
     def _update_table(self, table_type: TableType, table_col_map, history_df, stock):
         """
@@ -110,7 +133,6 @@ class InsertOperations:
                 value_list.append(info.get(key))
 
         self._insert_map_to_table(TableType.ticker, col_tuple, value_list)
-        self.commit_transaction()
 
     def insert_stock_history(self, stock, history_df):
         # Mapping the Columns that we get in historical data's dataframe to info, dividends, stock-split
