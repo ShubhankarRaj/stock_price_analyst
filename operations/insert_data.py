@@ -144,6 +144,14 @@ class InsertOperations:
         self._update_table(TableType.dividend, dividend_col_map, history_df, stock)
         self._update_table(TableType.split, split_col_map, history_df, stock)
 
+    def insert_sentiment_history(self,sentiment, stock):
+        for index,senti in sentiment.iterrows():
+            sentiment_dict = dict(senti)
+            QUERY = 'update ticker_info set sentiment = "'+sentiment_dict['Sentiment']+'" where symbol= "'+stock+'" and date_of_trade = "'+str(sentiment_dict['Date'])+'"'
+            print(QUERY)
+            self.cursor.execute(QUERY)
+
+        self.commit_transaction()
 
     def close_db_connection(self):
         self.conn.close_db_connection()
