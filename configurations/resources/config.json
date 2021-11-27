@@ -21,5 +21,5 @@
     "check_for_stock_in_split_info": "Select count(*) from split_info where symbol='{}';",
     "dump_ticker_info": "Select * from ticker_info;"
   },
-  "stock_dump_file": "/tmp/stock_dump_ticker_info.csv"
+  "stock_dump_file": "/Users/raj8lm/Desktop/stock_dump_ticker_info.csv"
 }

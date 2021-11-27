@@ -3,6 +3,7 @@ from startup.db_connector import DBHandle
 from configurations.get_config import get_queries, get_stock_dump_file
 from startup.get_columns import GetColumns
 from enum import Enum
+from pandas import DataFrame
 import os, csv
 
 CUSTOM_KEY = 'date_of_trade'
@@ -45,7 +46,9 @@ class InsertOperations:
         QUERY = get_queries().get('dump_ticker_info')
         try:
             self.cursor.execute(QUERY)
-            result = self.cursor.fetchall()
+            columns = [desc[0] for desc in self.cursor.description]
+            result = DataFrame(self.cursor.fetchall(), columns=columns)
+            print(result.head())
         except Exception as e:
             print(f"SQL Result dump failed. Exception: {e}")
 
@@ -55,11 +58,7 @@ class InsertOperations:
         result = self._query_ticker_info_table()
         if os.path.exists(get_stock_dump_file()):
             os.remove(get_stock_dump_file())
-
-        fp = open(get_stock_dump_file(), 'w+')
-        myFile = csv.writer(fp)
-        myFile.writerows(result)
-        fp.close()
+        result.to_csv(get_stock_dump_file(), index=False)
 
     def _insert_map_to_table(self, table_type: TableType, col_tuple, value_list):
         if table_type == TableType.ticker:
@@ -81,7 +80,6 @@ class InsertOperations:
         except Exception as e:
             print(f"Query execution for Inserting Stock info to DB failed. EXCEPTION: {e}")
         self.commit_transaction()
-
 
     def _update_table(self, table_type: TableType, table_col_map, history_df, stock):
         """
