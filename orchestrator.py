@@ -36,7 +36,7 @@ def _insert_info():
 
 def _get_sentiment_hist():
     for stock in stock_list:
-        sentiment_df = _get_sentiment_info(stock, 1000)
+        sentiment_df = _get_sentiment_info(stock, 7000)
         insert_operations.insert_sentiment_history(sentiment_df, stock)
 
 
