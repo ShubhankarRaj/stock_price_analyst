@@ -103,7 +103,6 @@ def _set_sentiment_for_day_range(search_query, no_of_tweets, no_of_days):
             neutral_list.append(tweet)  # appending the tweet that satisfies this condition
             neutral += 1  # increasing the count by 1
             sentiment_df.at[i, 'Sentiment'] = 'neu'
-    print(f"SENTIMENT DATAFRAME: {sentiment_df}")
     return sentiment_df
 
 
@@ -128,4 +127,5 @@ def get_datewise_sentiment(search_query, no_of_tweets, no_of_days):
         date_wise_sentiment = sentiment_df.groupby(['Date']).apply(_get_sentiment_count).reset_index()
         date_wise_sentiment[['Sentiment', 'Percentage']] = pd.DataFrame(date_wise_sentiment[0].tolist(),
                                                                           index=date_wise_sentiment.index)
+        print(date_wise_sentiment)
         return date_wise_sentiment

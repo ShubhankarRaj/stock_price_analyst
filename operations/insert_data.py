@@ -144,7 +144,7 @@ class InsertOperations:
     def insert_sentiment_history(self,sentiment, stock):
         for index,senti in sentiment.iterrows():
             sentiment_dict = dict(senti)
-            QUERY = 'update ticker_info set sentiment = "'+sentiment_dict['Sentiment']+'" where symbol= "'+stock+'" and date_of_trade = "'+str(sentiment_dict['Date'])+'"'
+            QUERY = 'update ticker_info set sentiment = "'+sentiment_dict['Sentiment']+'",sentiment_perc = "'+str(sentiment_dict['Percentage'])+'"  where symbol= "'+stock+'" and date_of_trade = "'+str(sentiment_dict['Date'])+'"'
             print(QUERY)
             self.cursor.execute(QUERY)
 
