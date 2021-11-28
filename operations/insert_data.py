@@ -67,7 +67,6 @@ class InsertOperations:
             QUERY = "Insert into dividend_info {}".format(col_tuple)
         elif table_type ==TableType.split:
             QUERY = "Insert into split_info {}".format(col_tuple)
-
         # Removing quotes from the Query
         QUERY = QUERY.replace("'", "")
         QUERY = "{} VALUES {}".format(QUERY, tuple(value_list))
