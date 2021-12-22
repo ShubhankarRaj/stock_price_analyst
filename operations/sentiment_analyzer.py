@@ -3,7 +3,6 @@ import pandas as pd
 import re
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import snscrape.modules.twitter as sntwitter
-import nltk
 
 # Download using the below method as it works in case of JUPYTER
 # nltk.download('vader_lexicon')
@@ -40,11 +39,30 @@ def _get_tweets_in_df(search_query, no_of_tweets, no_of_days):
                 now = now.strftime('%Y-%m-%d')
                 start_day = dt.date.today() - dt.timedelta(days=int(no_of_days))
                 start_day = start_day.strftime('%Y-%m-%d')
-                for i, tweet in enumerate(sntwitter.TwitterSearchScraper(
-                        query + ' lang:en since:' + start_day + ' until:' + now + ' -filter:links -filter:replies').get_items()):
-                    if i > int(no_of_tweets):
-                        break
-                    tweets_list.append([tweet.date, tweet.content, tweet.username])
+                loop_for_twitter = True
+                while (loop_for_twitter):
+                    try:
+                        all_twitter = sntwitter.TwitterSearchScraper(
+                            query + ' lang:en since:' + start_day + ' until:' + now)
+                        loop_for_twitter = False
+                        for i, tweet in enumerate(all_twitter.get_items()):
+                            if i > int(no_of_tweets):
+                                break
+                            tweets_list.append([tweet.date, tweet.content, tweet.username])
+                    except Exception as e:
+                        print(f"EXCEPTION: {e}")
+                        try:
+                            all_twitter = sntwitter.TwitterSearchScraper(
+                                query + ' lang:en since:' + start_day + ' until:' + now)
+                            loop_for_twitter = False
+                            for i, tweet in enumerate(all_twitter.get_items()):
+                                if i > int(no_of_tweets):
+                                    break
+                                tweets_list.append([tweet.date, tweet.content, tweet.username])
+                        except Exception as e_n:
+                            print(f"EXCEPTION: {e_n}")
+                            pass
+
 
                 # Creating a dataframe from the tweets list above
                 df = pd.DataFrame(tweets_list, columns=['Datetime', 'Text', 'Username'])
