@@ -1,8 +1,10 @@
 from __future__ import print_function
 from startup.db_connector import DBHandle
-from configurations.get_config import get_queries
+from configurations.get_config import get_queries, get_stock_dump_file
 from startup.get_columns import GetColumns
 from enum import Enum
+from pandas import DataFrame
+import os, csv
 
 CUSTOM_KEY = 'date_of_trade'
 
@@ -40,6 +42,24 @@ class InsertOperations:
         else:
             return True
 
+    def _query_ticker_info_table(self):
+        QUERY = get_queries().get('dump_ticker_info')
+        try:
+            self.cursor.execute(QUERY)
+            columns = [desc[0] for desc in self.cursor.description]
+            result = DataFrame(self.cursor.fetchall(), columns=columns)
+            print(result.head())
+        except Exception as e:
+            print(f"SQL Result dump failed. Exception: {e}")
+
+        return result
+
+    def dump_ticker_info(self):
+        result = self._query_ticker_info_table()
+        if os.path.exists(get_stock_dump_file()):
+            os.remove(get_stock_dump_file())
+        result.to_csv(get_stock_dump_file(), index=False)
+
     def _insert_map_to_table(self, table_type: TableType, col_tuple, value_list):
         if table_type == TableType.ticker:
             QUERY = "Insert into ticker_info {}".format(col_tuple)
@@ -47,7 +67,6 @@ class InsertOperations:
             QUERY = "Insert into dividend_info {}".format(col_tuple)
         elif table_type ==TableType.split:
             QUERY = "Insert into split_info {}".format(col_tuple)
-
         # Removing quotes from the Query
         QUERY = QUERY.replace("'", "")
         QUERY = "{} VALUES {}".format(QUERY, tuple(value_list))
@@ -59,8 +78,18 @@ class InsertOperations:
             self.cursor.execute(QUERY)
         except Exception as e:
             print(f"Query execution for Inserting Stock info to DB failed. EXCEPTION: {e}")
+        self.commit_transaction()
 
     def _update_table(self, table_type: TableType, table_col_map, history_df, stock):
+        """
+        Using the same function to update for all the different types of tables:
+        ticker_info/dividend_info/split_info
+        :param table_type:
+        :param table_col_map:
+        :param history_df:
+        :param stock:
+        :return:
+        """
         if table_type == TableType.ticker:
             cols = self.get_columns.get_ticker_info_cols()
         elif table_type == TableType.dividend:
@@ -94,12 +123,13 @@ class InsertOperations:
         col_tuple = tuple(cols)
         value_list = []
         for key in cols:
-            if key != CUSTOM_KEY:
+            if key == CUSTOM_KEY:
+                # Adding the value for the CUSTOM_KEY
+                value_list.append('CURDATE()')
+            else:
                 value_list.append(info.get(key))
-        # Adding the value for the CUSTOM_KEY
-        value_list.append('CURDATE()')
+
         self._insert_map_to_table(TableType.ticker, col_tuple, value_list)
-        self.commit_transaction()
 
     def insert_stock_history(self, stock, history_df):
         # Mapping the Columns that we get in historical data's dataframe to info, dividends, stock-split
@@ -111,6 +141,14 @@ class InsertOperations:
         self._update_table(TableType.dividend, dividend_col_map, history_df, stock)
         self._update_table(TableType.split, split_col_map, history_df, stock)
 
+    def insert_sentiment_history(self,sentiment, stock):
+        for index,senti in sentiment.iterrows():
+            sentiment_dict = dict(senti)
+            QUERY = 'update ticker_info set sentiment = "'+sentiment_dict['Sentiment']+'",sentiment_perc = "'+str(sentiment_dict['Percentage'])+'"  where symbol= "'+stock+'" and date_of_trade = "'+str(sentiment_dict['Date'])+'"'
+            print(QUERY)
+            self.cursor.execute(QUERY)
+
+        self.commit_transaction()
 
     def close_db_connection(self):
         self.conn.close_db_connection()
