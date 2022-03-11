@@ -8,7 +8,7 @@ Insert into ticker_info (sector, fullTimeEmployees, city, operatingCashflow, rev
 select * from ticker_info where sector is not null;
 select count(*) from ticker_info;
 select * from ticker_info where symbol = "BURGERKING.NS" order by date_of_trade desc;
-select count(*) from ticker_info where symbol = "TATAMOTORS.NS";
+select count(*) from ticker_info where symbol = "BURGERKING.NS";
 select * from ticker_info where sector is not null;
 select * from ticker_info where date_of_trade>'2021-12-05';
 
@@ -22,6 +22,9 @@ select count(*) from ticker_info where symbol="IRCTC.NS";
 select symbol,date_of_trade,sentiment from ticker_info;
 update ticker_info set sentiment = "pos" where symbol="IRCTC.NS" and date_of_trade = "2019-10-14 00:00:00";
 select symbol,date_of_trade,sentiment from ticker_info where symbol = "INFY.NS" and sentiment is not null;
+
+delete from ticker_info where symbol="LATENTVIEW.NS" and date_of_trade < "2022-01-11";
+delete from ticker_info where symbol="LATENTVIEW.NS";
 
 -- Finding Primary Key if a Table
 select COLUMN_NAME 
