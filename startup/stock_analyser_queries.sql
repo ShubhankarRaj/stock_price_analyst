@@ -10,9 +10,10 @@ select count(*) from ticker_info;
 select * from ticker_info where symbol = "BURGERKING.NS" order by date_of_trade desc;
 select count(*) from ticker_info where symbol = "BURGERKING.NS";
 select * from ticker_info where sector is not null;
-select * from ticker_info where date_of_trade>'2021-12-05';
+select * from ticker_info where date_of_trade = '2022-01-29';
 
-update ticker_info set date_of_trade='2021-12-28' where DATE(date_of_trade)='2021-12-29';
+update ticker_info set date_of_trade='2022-01-31' where DATE(date_of_trade)='2022-02-01';
+
 select * from split_info where split_ratio != 0.0;
 select * from dividend_info;
 select * from ticker_info where symbol="JSWSTEEL.NS";
@@ -24,6 +25,7 @@ update ticker_info set sentiment = "pos" where symbol="IRCTC.NS" and date_of_tra
 select symbol,date_of_trade,sentiment from ticker_info where symbol = "INFY.NS" and sentiment is not null;
 
 delete from ticker_info where symbol="LATENTVIEW.NS" and date_of_trade < "2022-01-11";
+delete from ticker_info where date_of_trade = "2022-01-31";
 delete from ticker_info where symbol="LATENTVIEW.NS";
 
 -- Finding Primary Key if a Table
@@ -33,4 +35,15 @@ WHERE TABLE_SCHEMA = 'ticks'
 AND TABLE_NAME = 'ticker_info' and COLUMN_KEY = 'PRI';
 
 desc dividend_info;
-
+##############
+use Employee;
+select * from employee_details;
+select add_month(hire_date,6) from employee_details;
+select employee_id, department_id, salary, sum(salary) over (partition by department_id) from employee_details;
+SELECT 
+	employee_id, 
+    department_id, 
+    salary, 
+    sum(salary) over(partition by department_id order by salary rows between unbounded preceding and current row) 
+    as a
+FROM employee_details;

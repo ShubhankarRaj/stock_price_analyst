@@ -15,3 +15,14 @@ When updating the data of the stocks, we need to run two commands:
     ```python orchestrator.py info```
 
 N.B.: hist command need to run before info.
+
+
+### TODO ITEMS
+Covariance is a statistical tool that is used to determine the relationship between the movements of two random variables.
+When two stocks tend to move together, they are seen as having a positive covariance; when they move inversely, the covariance is negative.
+Covariance is different from the correlation coefficient, a measure of the strength of a correlative relationship.
+Covariance is a significant tool in modern portfolio theory used to ascertain what securities to put in a portfolio.
+Risk and volatility can be reduced in a portfolio by pairing assets that have a negative covariance.
+
+N.B. : Use Covariance to Create a stock portfolio. Negatively covariated stocks can become a part of a portfolio
+making it way stable.
